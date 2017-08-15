@@ -27,6 +27,8 @@ function loadedAction() {
     map = makeMap();
 
     setCurrentGps();
+
+    makeCrosshair();
 }
 
 function makeMap() {
@@ -53,6 +55,32 @@ function setCurrentGps() {
             //   3: 시간 초과
         }
     );
+}
+
+function makeCrosshair() {
+    var markerImgSrc = 'https://www.daftlogic.com/images/cross-hairs.gif'; 
+    var markerImgSize = new daum.maps.Size(30,30);
+    var markerImgeOption = {
+        offset: new daum.maps.Point(15,15)
+    }
+
+    var markerImg = new daum.maps.MarkerImage(markerImgSrc, markerImgSize, markerImgeOption);
+    var latlng = map.getCenter();
+
+    var marker = new daum.maps.Marker({
+        position: new daum.maps.LatLng(latlng.getLat(), latlng.getLng()),
+        clickable: false,
+        image: markerImg
+    });
+
+    marker.setMap(map);
+
+    daum.maps.event.addListener(map, 'drag', onCrosshairEvent);
+    daum.maps.event.addListener(map, 'idle', onCrosshairEvent);
+
+    function onCrosshairEvent() {
+        marker.setPosition(map.getCenter());
+    }
 }
 
 loadedAction();
