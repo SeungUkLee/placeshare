@@ -3,7 +3,7 @@
 @section('content')
     <div class="container">
         <h1>
-            나만의 장소 글 쓰기
+           test 나만의 장소 글 쓰기 test
         </h1>
         <hr/>
         {{--form id 임의로 일단 지정 dropzone 때문--}}

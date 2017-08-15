@@ -14,6 +14,9 @@
     {{--<link href="/css/app.css" rel="stylesheet">--}}
 
     <link href="{{ elixir('css/app.css') }}" rel="stylesheet">
+
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=e15ef9974671fabf87bfe28ca05e8631&libraries=services"></script>
+
     @yield('style')
     <!-- Scripts -->
     <script>
