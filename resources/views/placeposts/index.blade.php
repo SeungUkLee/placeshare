@@ -14,11 +14,11 @@
                 </form>
 
                 <div id="searchPlaces-warp">
-                    <input type="text" id="searchKeyword" size="25" placeholder="장소, 주소...">
+                    <input type="text" id="searchKeyword" size="25" placeholder="저장할 장소, 주소...">
                     <button type="submit" onclick="searchPlaces()">검색</button>
                 </div>
-                <ul id="placeList"></ul>
-                <div id"paginationa"></div>
+                <ul id="placesList"></ul>
+                <div id="pagination"></div>
             </div>
         </div>
 <!-- =====TODO 직접 추가 바람start-->
@@ -40,7 +40,7 @@
   top: 5px;left: 20px;
   min-height: 35px;
   max-height: 80%;
-  width: 250px;
+  width: 260px;
   padding 5px;
   overflow-y: auto;
   background:rgba(255, 255, 255, 0.6);
@@ -117,6 +117,7 @@ function loadedAction() {
     setCurrentGps();
 
     makeCrosshair();
+    daum.maps.event.addListener(map, 'idle', showCurrentAddress);
 }
 
 function makeMap() {
@@ -169,6 +170,173 @@ function makeCrosshair() {
     function onCrosshairEvent() {
         marker.setPosition(map.getCenter());
     }
+}
+
+function showCurrentAddress() {
+    var geocoder = new daum.maps.services.Geocoder();
+    var latlng = map.getCenter(); 
+    
+    geocoder.coord2Address(latlng.getLng(), latlng.getLat(), callback);
+    
+    function callback(result, status) {
+        if (status === daum.maps.services.Status.OK) {
+            var detailAddr = !!result[0].road_address ?
+                result[0].road_address.address_name : 
+                result[0].address.address_name;
+                
+            console.log(detailAddr);
+            searchPlaceAndShowList(detailAddr);
+        }
+    }
+}
+
+function searchPlaceAndShowList(query) {
+    var ps = new daum.maps.services.Places();
+    var infowindow = new daum.maps.InfoWindow({zIndex:1, disableAutoPan:true});
+
+    ps.keywordSearch(query, placesSearchCB);
+
+    function placesSearchCB(data, status, pagination) {
+        if (status === daum.maps.services.Status.OK) {
+            displayPlaces(data, markers);
+            displayPagination(pagination);
+        }
+    }
+
+    function displayPlaces(places, markers) {
+        var listEl = document.getElementById('placesList'),
+            menuEl = document.getElementById('menu-wrap'),
+            fragment = document.createDocumentFragment(),
+            bounds = new daum.maps.LatLngBounds(),
+            listStr = '';    
+
+        removeAllChildNodes(listEl);
+
+        removeMarker(markers);
+
+        for ( var i=0; i<places.length; i++ ) {
+            var placePosition = new daum.maps.LatLng(places[i].y, places[i].x),
+                marker = addMarker(placePosition, i, markers), 
+                itemEl = getListItem(i, places[i]); 
+    
+            bounds.extend(placePosition);
+    
+            (function(marker, title) {
+                daum.maps.event.addListener(marker, 'mouseover', function() {
+                    displayInfowindow(marker, title);
+                });
+    
+                daum.maps.event.addListener(marker, 'mouseout', function() {
+                    infowindow.close();
+                });
+    
+                itemEl.onmouseover =  function () {
+                    displayInfowindow(marker, title);
+                };
+    
+                itemEl.onmouseout =  function () {
+                    infowindow.close();
+                };
+            })(marker, places[i].place_name);
+    
+            fragment.appendChild(itemEl);
+        }
+
+        listEl.appendChild(fragment);
+        menuEl.scrollTop = 0;
+    
+        return bounds;
+    }
+
+    function getListItem(index, places) {
+        var el = document.createElement('li'),
+            itemStr = '<span class="markerbg marker_' + (index+1) + '"></span>' +
+                    '<div class="info">' +
+                    '   <h5>' + places.place_name + '</h5>';
+    
+        if (places.road_address_name) {
+            itemStr += '    <span>' + places.road_address_name + '</span>' +
+                        '   <span class="jibun gray">' +  places.address_name  + '</span>';
+        } else {
+            itemStr += '    <span>' +  places.address_name  + '</span>'; 
+        }
+                     
+        itemStr += '  <span class="tel">' + places.phone  + '</span></div>';           
+    
+        el.innerHTML = itemStr;
+        el.className = 'item';
+    
+        return el;
+    }
+
+    function addMarker(position, idx, markers) {
+        var imageSrc = 'http://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png',
+            imageSize = new daum.maps.Size(36, 37),
+            imgOptions =  {
+                spriteSize : new daum.maps.Size(36, 691),
+                spriteOrigin : new daum.maps.Point(0, (idx*46)+10),
+                offset: new daum.maps.Point(13, 37)
+            },
+            markerImage = new daum.maps.MarkerImage(imageSrc, imageSize, imgOptions),
+                marker = new daum.maps.Marker({
+                position: position,
+                image: markerImage 
+            });
+    
+        marker.setMap(map);
+        markers.push(marker);
+    
+        return marker;
+    }
+    
+    function removeMarker(markers) {
+        for ( var i = 0; i < markers.length; i++ ) {
+            markers[i].setMap(null);
+        }   
+        markers = [];
+    }
+    
+    function displayPagination(pagination) {
+        var paginationEl = document.getElementById('pagination'),
+            fragment = document.createDocumentFragment(),
+            i; 
+    
+        while (paginationEl.hasChildNodes()) {
+            paginationEl.removeChild (paginationEl.lastChild);
+        }
+    
+        for (i=1; i<=pagination.last; i++) {
+            var el = document.createElement('a');
+            el.href = "#";
+            el.innerHTML = i;
+    
+            if (i===pagination.current) {
+                el.className = 'on';
+            } else {
+                el.onclick = (function(i) {
+                    return function() {
+                        pagination.gotoPage(i);
+                    }
+                })(i);
+            }
+    
+            fragment.appendChild(el);
+        }
+        paginationEl.appendChild(fragment);
+    }
+    
+    function displayInfowindow(marker, title) {
+        var content = '<div style="padding:5px;z-index:1;">' + title + '</div>';
+    
+        infowindow.setContent(content);
+        infowindow.open(map, marker);
+    }
+    
+    function removeAllChildNodes(el) {   
+        while (el.hasChildNodes()) {
+            el.removeChild (el.lastChild);
+        }
+    }    
 }
 
 loadedAction();
