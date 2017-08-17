@@ -21,7 +21,7 @@
             </label>
 
             <div class="option">
-                <form onsubmit="searchPlaces(); return false;">
+                <form onsubmit="(function (){searchPlaces();return false;})()">
                     <input type="text" value="" id="keyword" size="15">
                     <button type="submit">검색하기</button>
                 </form>
@@ -326,7 +326,6 @@
 <script>
 var map = null;
 var markers = [];
-var bindedGetCurrentAddress = null;
 
 function loadedAction() {
     map = makeMap();
@@ -339,7 +338,7 @@ function loadedAction() {
     daum.maps.event.addListener(map, 'drag', bindedOnCrosshairEvent);
     daum.maps.event.addListener(map, 'idle', bindedOnCrosshairEvent);
 
-    bindedGetCurrentAddress = getCurrentAddress.bind(null, map, markers);
+    var bindedGetCurrentAddress = getCurrentAddress.bind(null, map, markers);
     daum.maps.event.addListener(map, 'idle', bindedGetCurrentAddress);
 }
 
@@ -447,12 +446,10 @@ function searchPlaces() {
         return false;
     }
 
-    daum.maps.event.removeListener(map, 'idle', bindedGetCurrentAddress);
 
-    bounds = searchPlaceAndShowList(map, keyword, markers);
+    var bounds = searchPlaceAndShowList(map, keyword, markers);
     map.setBounds(bounds);
 
-    daum.maps.event.addListener(map, 'idle', bindedGetCurrentAddress);
 }
 
 function searchPlaceAndShowList(map, query, markers) {
@@ -642,7 +639,8 @@ function searchPlaceAndShowList(map, query, markers) {
     }
 }
 
-function searchPlace(map, query) {
+function searchPlace() {
+
     // 장소 검색 객체를 생성합니다
     var ps = new daum.maps.services.Places();
     // 키워드로 장소를 검색합니다
