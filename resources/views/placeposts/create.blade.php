@@ -3,6 +3,7 @@
 @section('content')
 <script>
     document.getElementsByTagName('body')[0].setAttribute('onload','loadedAction()');
+    document.getElementsByTagName('body')[0].setAttribute('onresize','changeList()');
 </script>
 <div class="container">
     <h1>
@@ -302,6 +303,7 @@
 <script>
 var map = null;
 var markers = [];
+var bindedGetCurrentAddress = null;
 
 function loadedAction() {
     map = makeMap();
@@ -314,7 +316,7 @@ function loadedAction() {
     daum.maps.event.addListener(map, 'drag', bindedOnCrosshairEvent);
     daum.maps.event.addListener(map, 'idle', bindedOnCrosshairEvent);
 
-    var bindedGetCurrentAddress = getCurrentAddress.bind(null, map, markers);
+    bindedGetCurrentAddress = getCurrentAddress.bind(null, map, markers);
     daum.maps.event.addListener(map, 'idle', bindedGetCurrentAddress);
 }
 
@@ -416,15 +418,18 @@ function getCurrentAddress(map, markers) {
 function searchPlaces() {
     var keyword = document.getElementById('keyword').value;
 
+
     if (!keyword.replace(/^\s+|\s+$/g, '')) {
         alert('키워드를 입력해주세요!');
         return false;
     }
 
+    daum.maps.event.removeListener(map, 'idle', bindedGetCurrentAddress);
+
     bounds = searchPlaceAndShowList(map, keyword, markers);
     map.setBounds(bounds);
 
-    //TODO 이벤트 제거한다
+    daum.maps.event.addListener(map, 'idle', bindedGetCurrentAddress);
 }
 
 function searchPlaceAndShowList(map, query, markers) {
@@ -666,5 +671,24 @@ function showSelectedPlace(latLng, name) {
     latInputTag.value = latLng.getLat();
     lngInputTag.value = latLng.getLng();
 }
+</script>
+<script>
+    var isExceeded768Px = false;
+
+    function changeList() {
+        var w = window.innerWidth;
+        var checkbox = document.getElementById('list-toggle');
+        // 작은데서 커졌으면
+        if (w > 768 && !isExceeded768Px) {
+            isExceeded768Px = true;
+            checkbox.checked = true;
+        }
+        // 큰데서 작아졌으면
+        else if (w <= 768 && isExceeded768Px) {
+            isExceeded768Px = false;
+            checkbox.checked = false;
+        }
+    }
+    changeList();
 </script>
 @stop
