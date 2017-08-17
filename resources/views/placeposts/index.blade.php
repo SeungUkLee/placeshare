@@ -5,6 +5,7 @@
     <div class="row">
         <div class="col-md-9" id="map-wrap">
             @include('map.index')
+        </div>
         <div class="col-md-3">
             <article>
                 @forelse($placeposts as $placepost)
