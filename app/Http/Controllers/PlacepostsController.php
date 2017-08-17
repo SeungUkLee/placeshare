@@ -60,10 +60,7 @@ class PlacepostsController extends Controller
         $placepost = $user->placeposts()->create(
             $request->getPayload()
         );
-        $placepost->lng = $request->get('lng');
-
-        Log::info('placepost store payload : ',$request->getPayload());
-
+        
         if (! $placepost) {
 
             return back()->withInput();
