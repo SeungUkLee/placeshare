@@ -94,6 +94,7 @@
             var marker = makeMarker(map, lat, lng)
 
             displayInfowindow(map, marker, name);
+            map.setDraggable(false);
         }
 
         function makeMap(lat, lng) {
