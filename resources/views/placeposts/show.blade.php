@@ -115,7 +115,11 @@
             var map = makeMap();
             var lat = '{{$placepost->lat}}';
             var lng = '{{$placepost->lng}}';
-            makeMarker(map, lat, lng)
+            var name =
+
+            var marker = makeMarker(map, lat, lng)
+
+            displayInfowindow(marker, name);
         }
 
         function makeMap() {
@@ -136,6 +140,13 @@
 
             marker.setMap(map);
             return marker;
+        }
+
+        function displayInfowindow(marker, title) {
+            var content = '<div style="padding:5px;z-index:1;">' + title + '</div>';
+
+            infowindow.setContent(content);
+            infowindow.open(map, marker);
         }
     </script>
 @stop
