@@ -6,7 +6,25 @@
     <input type="text" name="title" id="title" value="{{old('title', $placepost->title)}}" class="form-control">
     {!! $errors->first('title', '<span class="form-error">:message</span>') !!}
 </div>
+<div class="map_wrap">
+    <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
 
+    <div id="menu_wrap" class="bg_white">
+        <input class="list-toggle" id="list-toggle" type="checkbox" hidden/>
+        <label for="list-toggle" class="list-icon">
+            <span class="list-icon-bar"></span>
+        </label>
+
+        <div class="option">
+            <form onsubmit="searchPlaces(); return false;">
+                <input type="text" value="" id="keyword" size="15">
+                <button type="submit">검색하기</button>
+            </form>
+        </div>
+        <ul id="placesList"></ul>
+        <div id="pagination"></div>
+    </div>
+</div>
 <div class="form-group {{ $errors->has('content') ? 'has-error':'' }}">
     {{--<label for="content">--}}
         {{--본문--}}
