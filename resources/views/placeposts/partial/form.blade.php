@@ -6,6 +6,20 @@
     <input type="text" name="title" id="title" value="{{old('title', $placepost->title)}}" class="form-control">
     {!! $errors->first('title', '<span class="form-error">:message</span>') !!}
 </div>
+
+
+
+<div class="form-group {{$errors->has('title') ? 'has-error' : ''}}">
+    <label for="place">
+        장소
+    </label>
+    <p id="place"> test </p>
+    <input type="hidden" name="lat" id="place-lat" value="">
+    <input type="hidden" name="lng" id="place-lng" value="">
+</div>
+
+
+
 <div class="map_wrap">
     <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
 
@@ -25,6 +39,10 @@
         <div id="pagination"></div>
     </div>
 </div>
+
+
+
+
 <div class="form-group {{ $errors->has('content') ? 'has-error':'' }}">
     {{--<label for="content">--}}
         {{--본문--}}
@@ -35,17 +53,6 @@
     <label for="content"> 본문 </label>
     <textarea name="content" id="content" rows="10" class="form-control">{{ old('content', $placepost->content) }}</textarea>
     {!! $errors->first('content', '<span class="form-error">:message</span>') !!}
-</div>
-
-
-
-<div class="form-group {{$errors->has('title') ? 'has-error' : ''}}">
-    <label for="place">
-        장소
-    </label>
-    <p id="place"> test </p>
-    <input type="hidden" name="lat" id="place-lat" value="">
-    <input type="hidden" name="lng" id="place-lng" value="">
 </div>
 
 
