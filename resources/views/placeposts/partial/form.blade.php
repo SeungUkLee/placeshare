@@ -8,6 +8,7 @@
     <p id="place"></p>
     <input type="hidden" name="lat" id="place-lat" value="">
     <input type="hidden" name="lng" id="place-lng" value="">
+    <input type="hidden" name="placename" id="place-name" value="">
 </div>
 
 

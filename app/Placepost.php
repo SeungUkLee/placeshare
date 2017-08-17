@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Placepost extends Model
 {
     protected $fillable = [
-        'title', 'content', 'lat', 'lng', 'uuid'
+        'title', 'content', 'lat', 'lng', 'uuid', 'placename'
     ];
 
     public function user() {
