@@ -20,6 +20,17 @@
 </div>
 
 
+
+<div class="form-group {{$errors->has('title') ? 'has-error' : ''}}">
+    <label for="place">
+        장소
+    </label>
+    <p id="place"> test </p>
+    <input type="hidden" name="lat" id="place-lat" value="">
+    <input type="hidden" name="lng" id="place-lng" value="">
+</div>
+
+
 <div class="form-group" id="dropzoneDiv">
     <label for="my-dropzone">Files</label>
     <div id="my-dropzone" class="dropzone"></div>
