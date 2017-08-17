@@ -175,4 +175,20 @@ class PlacepostsController extends Controller
 //    {
 //        return redirect(route('placeposts.index'));
 //    }
+
+    public function getUserPlace() {
+        $user = \Auth::user(); // 세션에서 현재 로그인한 사용자의 정보를 가져오기위해 Auth::user() 메서드를 사용
+        $placeloaction = Placepost::select('lat','lng', 'title','uuid')->where('user_id', $user->id)->get();
+
+        foreach ($placeloaction as $item) {
+            $item->title =
+                '<div style="padding:5px"> <a href="/placeposts/'.$item->uuid.'">'.$item->title.'</a> 
+                    
+                </div>';
+        }
+
+        return response()->json([
+            'positions' => $placeloaction
+        ]);
+    }
 }

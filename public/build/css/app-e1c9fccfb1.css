@@ -11731,102 +11731,154 @@ label[for=my-dropzone] > small {
   cursor: pointer;
 }
 
-.carousel {
-  height: 400px;
-  width: 750px;
-  margin: 0 auto;
+/* Map */
+#map-wrap {
+  height: 60vh;
+  font-family: 'Malgun Gothic',dotum, '돋움',sans-serif;
+  font-size: 12px;
 }
 
-.carousel figure {
-  height: 400px;
-  background-size: cover;
-  position: relative;
+#map-wrap a:not(#button-add),
+#map-wrap a:hover:not(#button-add),
+#map-wrap a:active :not(#button-add) {
+  color: #000;
+  text-decoration: none;
 }
 
-.carousel figure::before {
-  content: '';
+#menu-wrap {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.5));
-  opacity: 0;
-  will-change: opacity;
-  transition: opacity 250ms ease-in-out;
+  top: 5px;
+  left: 20px;
+  min-height: 35px;
+  max-height: 80%;
+  width: 260px;
+  padding: 5px;
+  overflow-y: auto;
+  background: rgba(255, 255, 255, 0.6);
+  z-index: 1;
+  border-radius: 10px;
 }
 
+#map {
+  height: 100%;
+  /*position:relative;*/
+  /*overflow:hidden;*/
+}
+
+.listIcon-bar {
+  display: block;
+  width: 20px;
+  height: 3px;
+  background-color: #333;
+  position: relative;
+  transition: background-color .2s ease-out;
+}
+
+.listIcon-bar::before, .listIcon-bar::after {
+  display: block;
+  background-color: #333;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  content: "";
+}
+
+.listIcon-bar::before {
+  top: -7px;
+}
+
+.listIcon-bar::after {
+  top: 7px;
+}
+
+#listIcon {
+  float: left;
+  cursor: pointer;
+  margin: 5px;
+  padding: 10px 0px;
+  -webkit-user-select: none;
+  /* Chrome all / Safari all */
+  -moz-user-select: none;
+  /* Firefox all */
+  -ms-user-select: none;
+  /* IE 10+ */
+  user-select: none;
+  /* Likely future */
+}
+
+#searchPlaces-warp {
+  margin: 5px;
+  float: right;
+  /*position: absolute;
+  top: 3px;
+  left: 30px;*/
+}
+
+@media only screen and (min-width: 720px) {
+  /*col-md 대응*/
+  #map-wrap {
+    height: 80vh;
+  }
+}
+
+/* Map */
+#button-wrap {
+  color: white;
+  position: absolute;
+  right: 3vh;
+  bottom: 2vh;
+  min-height: 35px;
+  max-height: 80%;
+  padding: 5px;
+  overflow-y: auto;
+  z-index: 1;
+  border-radius: 10px;
+}
+
+.btn-glyphicon {
+  padding: 8px;
+  background: #ffffff;
+  margin-right: 4px;
+}
+
+.icon-btn {
+  padding: 1px 15px 3px 2px;
+  border-radius: 50px;
+}
+
+/* Makes images fully responsive */
+.img-responsive,
+.thumbnail > img,
+.thumbnail a > img,
+.carousel-inner > .item > img,
+.carousel-inner > .item > a > img {
+  display: block;
+  width: 100%;
+  height: 400px;
+}
+
+/* ------------------- Carousel Styling ------------------- */
 .carousel-inner {
-  border-radius: 3px;
-}
-
-.carousel .carousel-control {
-  fill: #fff;
-  background-image: none;
-  display: -webkit-box;
-  display: flex;
-  -webkit-box-pack: center;
-  justify-content: center;
-  -webkit-box-align: center;
-  align-items: center;
-  -webkit-transform: translate(0);
-  transform: translate(0);
-  will-change: transform;
-  transition: -webkit-transform 250ms ease-in;
-  transition: transform 250ms ease-in;
-  transition: transform 250ms ease-in, -webkit-transform 250ms ease-in;
-  opacity: 1;
-}
-
-.carousel .carousel-control.left {
-  -webkit-transform: translate(-100%);
-  transform: translate(-100%);
-}
-
-.carousel .carousel-control.right {
-  -webkit-transform: translate(100%);
-  transform: translate(100%);
-}
-
-.carousel .carousel-control svg {
-  height: 64px;
+  border-radius: 15px;
 }
 
 .carousel-caption {
+  background-color: rgba(0, 0, 0, 0.5);
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
   z-index: 10;
-  padding: 25px;
+  padding: 0 0 10px 25px;
   color: #fff;
   text-align: left;
-  -webkit-transform: translateY(100%);
-  transform: translateY(100%);
-  will-change: transform;
-  transition: -webkit-transform 250ms ease-in;
-  transition: transform 250ms ease-in;
-  transition: transform 250ms ease-in, -webkit-transform 250ms ease-in;
-  font-size: 3em;
-  margin: 0;
 }
 
-.carousel-caption::first-letter {
-  text-transform: uppercase;
+.carousel-control.left,
+.carousel-control.right {
+  background-image: none;
 }
 
-.carousel:hover .carousel-control.left, .carousel:hover .carousel-control.right {
-  -webkit-transform: translate(0);
-  transform: translate(0);
-}
-
-.carousel:hover figure::before {
-  opacity: 1;
-}
-
-.carousel:hover figure .carousel-caption {
-  -webkit-transform: translateY(0);
-  transform: translateY(0);
-}
+/* ------------------- Section Styling - Not needed for carousel styling ------------------- */
 
 /*# sourceMappingURL=app.css.map */

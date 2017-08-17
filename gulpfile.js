@@ -14,6 +14,10 @@ require('laravel-elixir-vue');
  |
  */
 
+
+var bootstrap_sass = './node_modules/bootstrap-sass/';
+
+
 elixir((mix) => {
     mix.sass('app.scss');
     mix.webpack('app.js');
@@ -29,6 +33,7 @@ elixir((mix) => {
         'css/app.css',
         'js/app.js'
     ]);
+    mix.copy(bootstrap_sass+"assets/fonts/bootstrap",'public/fonts');
     mix.copy('node_modules/font-awesome/fonts','public/build/fonts');
 });
 

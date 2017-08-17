@@ -27,6 +27,7 @@
         ]); ?>
 
     </script>
+
 </head>
 <body>
     <div id="app">
@@ -93,6 +94,8 @@
     <!-- Scripts -->
     {{--<script src="/js/app.js"></script>--}}
     <script src="{{ elixir('js/app.js') }}"></script>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=f4a771683842af2844c73cbf6a43d62e&libraries=clusterer"></script>
+
     @yield('script')
 </body>
 </html>
