@@ -687,8 +687,10 @@ function showSelectedPlace(latLng, name) {
     var placeId = document.getElementById('place');
     var latInputTag = document.getElementById('place-lat');
     var lngInputTag = document.getElementById('place-lng');
+    var nameInputTag = document.getElementById('place-name');
 
     placeId.innerHTML = name;
+    nameInputTag.value = name;
     latInputTag.value = latLng.getLat();
     lngInputTag.value = latLng.getLng();
 }
