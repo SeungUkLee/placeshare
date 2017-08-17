@@ -88,11 +88,12 @@
         function loadedAction() {
             var lat = '{{$placepost->lat}}';
             var lng = '{{$placepost->lng}}';
+            var name = '{{$placepost->placename}}';
             var map = makeMap(lat, lng);
 
             var marker = makeMarker(map, lat, lng)
 
-//            displayInfowindow(marker, name);
+            displayInfowindow(map, marker, name);
         }
 
         function makeMap(lat, lng) {
@@ -115,8 +116,9 @@
             return marker;
         }
 
-        function displayInfowindow(marker, title) {
+        function displayInfowindow(map, marker, title) {
             var content = '<div style="padding:5px;z-index:1;">' + title + '</div>';
+            var infowindow = new daum.maps.InfoWindow({zIndex:1,disableAutoPan:true});
 
             infowindow.setContent(content);
             infowindow.open(map, marker);
