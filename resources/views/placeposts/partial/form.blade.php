@@ -5,7 +5,7 @@
     <label for="place">
         장소
     </label>
-    <p id="place"> test </p>
+    <p id="place"></p>
     <input type="hidden" name="lat" id="place-lat" value="">
     <input type="hidden" name="lng" id="place-lng" value="">
 </div>
