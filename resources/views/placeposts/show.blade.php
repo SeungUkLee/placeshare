@@ -1,11 +1,18 @@
 @extends('layouts.app')
 
 @section('content')
+    <script>
+        document.getElementsByTagName('body')[0].setAttribute('onload','loadedAction()');
+    </script>
     <div class="container">
         <h1>
             Placepost 상세보기
         </h1>
         <hr/>
+
+        <div class="map_wrap">
+            <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
+        </div>
 
         <article data-id="{{ $placepost->id }}">
             <div class="form-group">
@@ -79,4 +86,56 @@
         });
     </script>
 @stop
+@section('style')
+    <style>
+        .map_wrap, .map_wrap * {
+            margin: 0;
+            padding: 0;
+            font-family: 'Malgun Gothic', dotum, '돋움', sans-serif;
+            font-size: 12px;
+        }
 
+        .map_wrap a, .map_wrap a:hover, .map_wrap a:active {
+            color: #000;
+            text-decoration: none;
+        }
+
+        .map_wrap {
+            position: relative;
+            width: 100%;
+            height: 500px;
+        }
+
+    </style>
+@stop
+
+@section('script')
+    <script>
+        function loadedAction() {
+            var map = makeMap();
+            var lat = '{{$placepost->lat}}';
+            var lng = '{{$placepost->lng}}';
+            makeMarker(map, lat, lng)
+        }
+
+        function makeMap() {
+            var container = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
+            var options = { //지도를 생성할 때 필요한 기본 옵션
+                center: new daum.maps.LatLng(33.450701, 126.570667), //지도의 중심좌표.
+                level: 3 //지도의 레벨(확대, 축소 정도)
+            };
+
+            return new daum.maps.Map(container, options); //지도 생성 및 객체 리턴
+        }
+
+        function makeMarker(map, lat, lng) {
+            var marker = new daum.maps.Marker({
+                position: new daum.maps.LatLng(lat, lng),
+                clickable: true
+            });
+
+            marker.setMap(map);
+            return marker;
+        }
+    </script>
+@stop
