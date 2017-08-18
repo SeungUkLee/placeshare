@@ -5,11 +5,6 @@
         document.getElementsByTagName('body')[0].setAttribute('onload','loadedAction()');
     </script>
     <div class="container">
-        <h1>
-            Placepost 상세보기
-        </h1>
-        <hr/>
-
         <div class="map_wrap">
             <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
         </div>
@@ -86,48 +81,29 @@
             var lat = '{{$placepost->lat}}';
             var lng = '{{$placepost->lng}}';
             var name = '{{$placepost->placename}}';
-            var map = makeMap(lat, lng);
 
-            var marker = makeMarker(map, lat, lng)
+            var map = makeMap(name, lat, lng);
 
-            addController(map);
-
-            displayInfowindow(map, marker, name);
-            map.setDraggable(false);
-            map.setZoomable(false);
+            changeLinkForSearchPath(map, name, lat, lng);
         }
 
-        function makeMap(lat, lng) {
-            var container = document.getElementById('map'); //지도를 담을 영역의 DOM 레퍼런스
-            var options = { //지도를 생성할 때 필요한 기본 옵션
+        function makeMap(name, lat, lng) {
+            var container = document.getElementById('map');
+            var options = {
                 center: new daum.maps.LatLng(lat, lng),
-                level: 3 //지도의 레벨(확대, 축소 정도)
+                level: 3,
+                marker : {
+                    position: new daum.maps.LatLng(lat, lng),
+                    text: name
+                }
             };
 
-            return new daum.maps.Map(container, options); //지도 생성 및 객체 리턴
+            return new daum.maps.StaticMap(container, options);
         }
-
-        function makeMarker(map, lat, lng) {
-            var marker = new daum.maps.Marker({
-                position: new daum.maps.LatLng(lat, lng),
-                clickable: true
+        function changeLinkForSearchPath(map, name, lat, lng) {
+            $('#map').ready(function () {
+                $('#map>a')[0].href = "http://map.daum.net/link/to/" + name + "," + lat + "," + lng;
             });
-
-            marker.setMap(map);
-            return marker;
-        }
-
-        function addController(map) {
-            var zoomControl = new daum.maps.ZoomControl();
-            map.addControl(zoomControl, daum.maps.ControlPosition.RIGHT);
-        }
-
-        function displayInfowindow(map, marker, title) {
-            var content = '<div style="padding:5px;z-index:1;">' + title + '</div>';
-            var infowindow = new daum.maps.InfoWindow({zIndex:1,disableAutoPan:true});
-
-            infowindow.setContent(content);
-            infowindow.open(map, marker);
         }
     </script>
 @stop

@@ -11753,7 +11753,8 @@ label[for=my-dropzone] > small {
 .map_wrap {
   position: relative;
   width: 100%;
-  height: 500px;
+  height: 50vh;
+  margin-bottom: 10px;
 }
 
 #map-wrap {

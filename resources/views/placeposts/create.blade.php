@@ -6,11 +6,6 @@
         document.getElementsByTagName('body')[0].setAttribute('onresize', 'changeList()');
     </script>
     <div class="container">
-        <h1>
-            글 쓰기
-        </h1>
-        <hr/>
-
         <div class="map_wrap">
             <div id="map"
                  style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
@@ -474,6 +469,8 @@
             searchPlaceAndShowList(map, keyword, markers, function (bounds) {
                 ignoreIdleSearchAddress(function () {
                     map.setBounds(bounds);
+                    var listToggle = document.getElementById('list-toggle');
+                    listToggle.checked = true;
                 });
             });
         }
