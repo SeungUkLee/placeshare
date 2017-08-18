@@ -461,9 +461,9 @@
             }
 
             searchPlaceAndShowList(map, keyword, markers, function (bounds) {
-                daum.maps.event.removeListener(map, 'idle', boundGetCurrentAddress);
-                map.setBounds(bounds);
-                daum.maps.event.addListener(map, 'idle', boundGetCurrentAddress);
+                ignoreIdleSearchAddress(function () {
+                    map.setBounds(bounds);
+                })
             });
 
         }
@@ -529,6 +529,7 @@
                         daum.maps.event.addListener(marker, 'click', function () {
                             showSelectedPlace(placePosition, title);
                             removeSavedPlace();
+                            moveSelectedPlace(placePosition);
                         });
 
                         itemEl.onmouseover = function () {
@@ -540,6 +541,7 @@
                         itemEl.onclick = function () {
                             showSelectedPlace(placePosition, title);
                             removeSavedPlace();
+                            moveSelectedPlace(placePosition);
                         };
                     })(marker, places[i].place_name, placePosition);
 
@@ -667,6 +669,19 @@
             nameInputTag.value = name;
             latInputTag.value = latLng.getLat();
             lngInputTag.value = latLng.getLng();
+        }
+
+        function moveSelectedPlace(latLng) {
+            ignoreIdleSearchAddress(function () {
+                var moveLatLon = new daum.maps.LatLng(latLng.getLat(), latLng.getLng());
+                map.setCenter(moveLatLon);
+            });
+        }
+
+        function ignoreIdleSearchAddress(callback) {
+            daum.maps.event.removeListener(map, 'idle', boundGetCurrentAddress);
+            callback();
+            daum.maps.event.addListener(map, 'idle', boundGetCurrentAddress);
         }
     </script>
     <script>
