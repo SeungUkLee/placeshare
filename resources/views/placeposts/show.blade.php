@@ -54,7 +54,6 @@
                     삭제하기
                 </button>
                 @endcan
-                <a href="#" class="btn btn-info">위치 수정</a>
                 <a href="{{ route('placeposts.index') }}" class="btn btn-default">
                     <i class="fa fa-list"></i>
                     글 목록
