@@ -22,15 +22,14 @@
                 <input type="text" name="title" id="title" value="{{ $placepost->title }}" class="form-control" readonly="true">
             </div>
 
-
-            <div class="form-group {{ $errors->has('content') ? 'has-error':'' }}">
-                <label for="content"> 본문 </label>
-                <textarea name="content" id="content" rows="10" class="form-control" readonly="true">{{ old('content', $placepost->content) }}</textarea>
-                {!! $errors->first('content', '<span class="form-error">:message</span>') !!}
+            <div class="form-group">
+                <label for="content">
+                    본문
+                </label>
+            <textarea name="content" id="content" rows="5" class="form-control" readonly="true">
+                {{ $placepost->content }}
+            </textarea>
             </div>
-
-
-
                 @include('attachments.partial.list', ['attachments' => $placepost->attachments])
             <br>
         </article>
@@ -55,7 +54,6 @@
                     삭제하기
                 </button>
                 @endcan
-
                 <a href="{{ route('placeposts.index') }}" class="btn btn-default">
                     <i class="fa fa-list"></i>
                     글 목록
@@ -94,8 +92,11 @@
 
             var marker = makeMarker(map, lat, lng)
 
+            addController(map);
+
             displayInfowindow(map, marker, name);
             map.setDraggable(false);
+            map.setZoomable(false);
         }
 
         function makeMap(lat, lng) {
@@ -116,6 +117,11 @@
 
             marker.setMap(map);
             return marker;
+        }
+
+        function addController(map) {
+            var zoomControl = new daum.maps.ZoomControl();
+            map.addControl(zoomControl, daum.maps.ControlPosition.RIGHT);
         }
 
         function displayInfowindow(map, marker, title) {

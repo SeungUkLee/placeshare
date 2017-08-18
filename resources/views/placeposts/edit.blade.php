@@ -17,7 +17,7 @@
                 </label>
 
                 <div class="option">
-                    <form onsubmit="(function (){searchPlaces();return false;})()">
+                    <form onsubmit="searchPlaces(); return false;">
                         <input type="text" value="" id="keyword" size="15">
                         <button type="submit">검색하기</button>
                     </form>
@@ -317,6 +317,7 @@
         var map = null;
         var markers = [];
         var savedPlace = {marker:null, infowindow:null};
+        var boundGetCurrentAddress = null;
 
         function loadedAction() {
             var lat = '{{$placepost->lat}}';
@@ -340,12 +341,12 @@
             // makeMarker(map, 33.450701, 126.570667);
 
             var crosshair = makeCrosshair(map);
-            var bindedOnCrosshairEvent = onCrosshairEvent.bind(null, map, crosshair);
-            daum.maps.event.addListener(map, 'drag', bindedOnCrosshairEvent);
-            daum.maps.event.addListener(map, 'idle', bindedOnCrosshairEvent);
+            var boundOnCrosshairEvent = onCrosshairEvent.bind(null, map, crosshair);
+            daum.maps.event.addListener(map, 'drag', boundOnCrosshairEvent);
+            daum.maps.event.addListener(map, 'idle', boundOnCrosshairEvent);
 
-            var bindedGetCurrentAddress = getCurrentAddress.bind(null, map, markers);
-            daum.maps.event.addListener(map, 'idle', bindedGetCurrentAddress);
+            boundGetCurrentAddress = getCurrentAddress.bind(null, map, markers);
+            daum.maps.event.addListener(map, 'idle', boundGetCurrentAddress);
         }
 
         function getCurrentGps(map) {
@@ -459,13 +460,15 @@
                 return false;
             }
 
-
-            var bounds = searchPlaceAndShowList(map, keyword, markers);
-            map.setBounds(bounds);
+            searchPlaceAndShowList(map, keyword, markers, function (bounds) {
+                ignoreIdleSearchAddress(function () {
+                    map.setBounds(bounds);
+                })
+            });
 
         }
 
-        function searchPlaceAndShowList(map, query, markers) {
+        function searchPlaceAndShowList(map, query, markers, boundsCallback) {
             // 장소 검색 객체를 생성합니다
             var ps = new daum.maps.services.Places();
 
@@ -526,6 +529,7 @@
                         daum.maps.event.addListener(marker, 'click', function () {
                             showSelectedPlace(placePosition, title);
                             removeSavedPlace();
+                            moveSelectedPlace(placePosition);
                         });
 
                         itemEl.onmouseover = function () {
@@ -537,18 +541,19 @@
                         itemEl.onclick = function () {
                             showSelectedPlace(placePosition, title);
                             removeSavedPlace();
+                            moveSelectedPlace(placePosition);
                         };
                     })(marker, places[i].place_name, placePosition);
 
                     fragment.appendChild(itemEl);
                 }
 
-                // 검색결과 항목들을 검색결과 목록 Elemnet에 추가합니다
                 listEl.appendChild(fragment);
                 menuEl.scrollTop = 0;
 
-                // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
-                // map.setBounds(bounds);
+                if (boundsCallback != undefined) {
+                    boundsCallback(bounds);
+                }
 
                 return bounds;
             }
@@ -654,50 +659,6 @@
             }
         }
 
-        function searchPlace() {
-
-            // 장소 검색 객체를 생성합니다
-            var ps = new daum.maps.services.Places();
-            // 키워드로 장소를 검색합니다
-            ps.keywordSearch(query, placesSearchCB);
-
-            var infowindow = new daum.maps.InfoWindow({zIndex: 1});
-
-            // 키워드 검색 완료 시 호출되는 콜백함수 입니다
-            function placesSearchCB(data, status, pagination) {
-                if (status === daum.maps.services.Status.OK) {
-
-                    // 검색된 장소 위치를 기준으로 지도 범위를 재설정하기위해
-                    // LatLngBounds 객체에 좌표를 추가합니다
-                    var bounds = new daum.maps.LatLngBounds();
-
-                    for (var i = 0; i < data.length; i++) {
-                        displayMarker(data[i]);
-                        bounds.extend(new daum.maps.LatLng(data[i].y, data[i].x));
-                    }
-
-                    // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
-                    // map.setBounds(bounds);
-                }
-            }
-
-            // 지도에 마커를 표시하는 함수입니다
-            function displayMarker(place) {
-
-                // 마커를 생성하고 지도에 표시합니다
-                var marker = new daum.maps.Marker({
-                    map: map,
-                    position: new daum.maps.LatLng(place.y, place.x)
-                });
-
-                // 마커에 클릭이벤트를 등록합니다
-                daum.maps.event.addListener(marker, 'click', function () {
-                    // 마커를 클릭하면 장소명이 인포윈도우에 표출됩니다
-                    infowindow.setContent('<div style="padding:5px;font-size:12px;">' + place.place_name + '</div>');
-                    infowindow.open(map, marker);
-                });
-            }
-        }
         function showSelectedPlace(latLng, name) {
             var placeId = document.getElementById('place');
             var latInputTag = document.getElementById('place-lat');
@@ -708,6 +669,19 @@
             nameInputTag.value = name;
             latInputTag.value = latLng.getLat();
             lngInputTag.value = latLng.getLng();
+        }
+
+        function moveSelectedPlace(latLng) {
+            ignoreIdleSearchAddress(function () {
+                var moveLatLon = new daum.maps.LatLng(latLng.getLat(), latLng.getLng());
+                map.setCenter(moveLatLon);
+            });
+        }
+
+        function ignoreIdleSearchAddress(callback) {
+            daum.maps.event.removeListener(map, 'idle', boundGetCurrentAddress);
+            callback();
+            daum.maps.event.addListener(map, 'idle', boundGetCurrentAddress);
         }
     </script>
     <script>
