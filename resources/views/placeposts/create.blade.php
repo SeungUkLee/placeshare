@@ -469,6 +469,8 @@
             searchPlaceAndShowList(map, keyword, markers, function (bounds) {
                 ignoreIdleSearchAddress(function () {
                     map.setBounds(bounds);
+                    var listToggle = document.getElementById('list-toggle');
+                    listToggle.checked = true;
                 });
             });
         }
