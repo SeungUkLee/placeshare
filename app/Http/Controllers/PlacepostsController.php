@@ -71,7 +71,9 @@ class PlacepostsController extends Controller
             $attachment->placepost()->associate($placepost);
             $attachment->save();
         });
+
 //        return $this->respondCreated($placepost);
+        flash()->success('글이 정상적으로 저장되었습니다.');
         return redirect(route('placeposts.index'));
 
 //        $placepost = new Placepost([
@@ -141,6 +143,7 @@ class PlacepostsController extends Controller
         $placepost->update($request->all());
 
 //        return $this->respondUpdated($placepost);
+        flash()->success('글이 정상적으로 수정되었습니다.');
         return redirect(route('placeposts.show', $placepost->uuid));
     }
 
@@ -156,6 +159,7 @@ class PlacepostsController extends Controller
         $this->deleteAttachments($placepost->attachments);
         $placepost->delete();
 
+        flash()->error('글이 삭제되었습니다.');
         return response()->json([], 204, [], JSON_PRETTY_PRINT);
 //        return redirect(route('/placeposts'));
     }

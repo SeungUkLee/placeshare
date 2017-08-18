@@ -178,6 +178,9 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        //Flash
+        Laracasts\Flash\FlashServiceProvider::class,
+
 
 
     ],
@@ -229,7 +232,8 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         // ommited
         'Uuid' => Webpatser\Uuid\Uuid::class,
-
+        // Flash
+        'Flash' => Laracasts\Flash\Flash::class,
 
     ],
 

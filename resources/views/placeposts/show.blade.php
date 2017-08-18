@@ -22,14 +22,12 @@
                 <input type="text" name="title" id="title" value="{{ $placepost->title }}" class="form-control" readonly="true">
             </div>
 
-            <div class="form-group">
-                <label for="content">
-                    본문
-                </label>
-            <textarea name="content" id="content" rows="5" class="form-control" readonly="true">
-                {{ $placepost->content }}
-            </textarea>
+            <div class="form-group {{ $errors->has('content') ? 'has-error':'' }}">
+                <label for="content"> 본문 </label>
+                <textarea name="content" id="content" rows="10" class="form-control" readonly="true">{{ old('content', $placepost->content) }}</textarea>
+                {!! $errors->first('content', '<span class="form-error">:message</span>') !!}
             </div>
+
                 @include('attachments.partial.list', ['attachments' => $placepost->attachments])
             <br>
         </article>
