@@ -28,7 +28,7 @@ class PlacepostsRequest extends FormRequest
     {
         return [
             'title' => ['required'],
-            'content' => ['required' , 'min:5'],
+//            'content' => ['required' , 'min:5'],
             'files' => ['array'],
             'files.*' => ['mimes:jpg,png','max:30000'],
         ];
@@ -46,7 +46,7 @@ class PlacepostsRequest extends FormRequest
     {
         return [
             'title' => '제목',
-            'content' => '본문',
+//            'content' => '본문',
         ];
     }
 

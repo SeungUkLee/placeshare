@@ -25,12 +25,6 @@
 
 
 <div class="form-group {{ $errors->has('content') ? 'has-error':'' }}">
-    {{--<label for="content">--}}
-        {{--본문--}}
-    {{--</label>--}}
-    {{--<textarea name="content" id="content" rows="5" class="form-control">--}}
-        {{--{{old('content', $placepost->content)}}--}}
-    {{--</textarea>--}}
     <label for="content"> 본문 </label>
     <textarea name="content" id="content" rows="10" class="form-control">{{ old('content', $placepost->content) }}</textarea>
     {!! $errors->first('content', '<span class="form-error">:message</span>') !!}

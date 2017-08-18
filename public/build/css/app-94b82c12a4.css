@@ -11880,5 +11880,16 @@ label[for=my-dropzone] > small {
 }
 
 /* ------------------- Section Styling - Not needed for carousel styling ------------------- */
+@media screen and (min-width: 768px) {
+  .section-white {
+    padding: 1.5em 0;
+  }
+}
+
+@media screen and (min-width: 992px) {
+  .container {
+    max-width: 930px;
+  }
+}
 
 /*# sourceMappingURL=app.css.map */
