@@ -345,20 +345,60 @@
         }
 
         function getCurrentGps(map) {
-            navigator.geolocation.getCurrentPosition(function (pos) {
-                    console.log("시작위도 : " + pos.coords.latitude);
-                    console.log("시작경도 : " + pos.coords.longitude);
-                    var moveLatlng = new daum.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
-                    map.panTo(moveLatlng);
-                }, function (error) {
-                    console.log('Error occurred. Error code: ' + error.code);
-                    // error.code는 다음을 의미함:
-                    //   0: 알 수 없는 오류
-                    //   1: 권한 거부
-                    //   2: 위치를 사용할 수 없음 (이 오류는 위치 정보 공급자가 응답)
-                    //   3: 시간 초과
+            var apiGeolocationSuccess = function (pos) {
+                var moveLatlng = new daum.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
+                map.panTo(moveLatlng);
+            };
+
+            var tryAPIGeolocation = function () {
+                jQuery.post("https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyDCa1LUe1vOczX1hO_iGYgyo8p_jYuGOPU", function (success) {
+                    apiGeolocationSuccess({
+                        coords: {
+                            latitude: success.location.lat,
+                            longitude: success.location.lng
+                        }
+                    });
+                })
+                    .fail(function (err) {
+                        alert("API Geolocation error! \n\n" + err);
+                    });
+            };
+
+            var browserGeolocationSuccess = function (pos) {
+                var moveLatlng = new daum.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
+                map.panTo(moveLatlng);
+            };
+
+            var browserGeolocationFail = function (error) {
+                switch (error.code) {
+                    case error.TIMEOUT:
+                        alert("Browser geolocation error !\n\nTimeout.");
+                        break;
+                    case error.PERMISSION_DENIED:
+                        if (error.message.indexOf("Only secure origins are allowed") == 0) {
+                            tryAPIGeolocation();
+                        }
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        alert("Browser geolocation error !\n\nPosition unavailable.");
+                        break;
                 }
-            );
+            };
+
+            var tryGeolocation = function () {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        browserGeolocationSuccess,
+                        browserGeolocationFail,
+                        {
+                            maximumAge: 50000,
+                            timeout: 20000,
+                            enableHighAccuracy: true
+                        });
+                }
+            };
+
+            tryGeolocation();
         }
 
         function makeMap() {
