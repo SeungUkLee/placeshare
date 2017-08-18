@@ -86,9 +86,6 @@
 
             var map = makeMap(name, lat, lng);
 
-//            map.setDraggable(false);
-//            map.setZoomable(false);
-
             changeLinkForSearchPath(map, name, lat, lng);
         }
 
@@ -106,7 +103,6 @@
             return new daum.maps.StaticMap(container, options);
         }
         function changeLinkForSearchPath(map, name, lat, lng) {
-            console.log(map)
             $('#map').ready(function () {
                 $('#map>a')[0].href = "http://map.daum.net/link/to/" + name + "," + lat + "," + lng;
             });
