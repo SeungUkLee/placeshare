@@ -5,11 +5,6 @@
         document.getElementsByTagName('body')[0].setAttribute('onload','loadedAction()');
     </script>
     <div class="container">
-        <h1>
-            Placepost 상세보기
-        </h1>
-        <hr/>
-
         <div class="map_wrap">
             <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
         </div>
