@@ -23,6 +23,10 @@ class AppServiceProvider extends ServiceProvider
 
             $view->with(compact('currentUser', 'currentRouteName', 'currentLocale', 'currentUrl'));
         });
+
+//        if (!\App::environment('local')) {
+            \URL::forceSchema('https');
+//        }
     }
 
     /**
